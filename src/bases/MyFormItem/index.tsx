@@ -1,3 +1,4 @@
+"use client";
 import { Form } from "antd";
 import { FormItemProps } from "antd/lib";
 type TMyFormItemProps = {} & FormItemProps;

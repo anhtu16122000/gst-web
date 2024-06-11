@@ -1,79 +1,98 @@
 /* eslint-disable jsx-a11y/alt-text */
 import MyUpload, { TMyUploadProps } from "@/bases/MyUpload";
+import filesService from "@/services/files";
+import { myToast } from "@/utils/toastHandler";
 import { PlusOutlined } from "@ant-design/icons";
-import type { GetProp, UploadFile, UploadProps } from "antd";
-import { Image } from "antd";
+import { Image, type GetProp, type UploadProps } from "antd";
 import ImgCrop from "antd-img-crop";
-import React, { useState } from "react";
+import { LiaTimesSolid } from "react-icons/lia";
+
+import MyButtonHTML from "@/bases/MyButtonHTML";
+import { getUrlImage } from "@/utils/imageHandler";
+import React, { useLayoutEffect, useState } from "react";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
-const getBase64 = (file: FileType): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
-
-type TMyUploadImageProps = {
+export type TMyUploadImageSingleProps = {
   limit?: number;
   myUploadProps?: TMyUploadProps;
+  value?: string;
+  onChange?: (value: string) => void;
 };
 
-const MyUploadImage: React.FC<TMyUploadImageProps> = (props) => {
-  const { limit = 1, myUploadProps = {} } = props;
+const MyUploadImageSingle: React.FC<TMyUploadImageSingleProps> = (props) => {
+  const { myUploadProps = {}, value, onChange } = props;
+  const [imageSrc, setImageSrc] = useState<string>(value || "");
 
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as FileType);
+  useLayoutEffect(() => {
+    if (typeof onChange === "function") {
+      onChange(imageSrc);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageSrc]);
 
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
-  };
+  useLayoutEffect(() => {
+    setImageSrc(value || "");
+  }, [value]);
 
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+  const onChangeUpload = async (file: Blob | File) => {
+    try {
+      const res = await filesService.imageUpload(file);
+      setImageSrc(res?.data?.data || "");
+      if (typeof onChange === "function") {
+        onChange(res?.data?.data || "");
+      }
+    } catch (error: any) {
+      myToast.error(error?.message?.[0]);
+    }
   };
 
   const uploadButton = (
-    <button style={{ border: 0, background: "none" }} type="button">
+    <MyButtonHTML style={{ border: 0, background: "none" }} type="button">
       <PlusOutlined />
       <div style={{ marginTop: 8 }}>Chọn ảnh</div>
-    </button>
+    </MyButtonHTML>
   );
   return (
     <>
-      <ImgCrop rotationSlider>
-        <MyUpload
-          // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-          listType="picture-card"
-          fileList={fileList}
-          onPreview={handlePreview}
-          onChange={handleChange}
-          {...myUploadProps}
+      {!imageSrc && (
+        <ImgCrop
+          quality={1}
+          showGrid
+          minZoom={5}
+          aspectSlider
+          modalWidth={700}
+          showReset
+          aspect={3 / 4}
+          rotationSlider
         >
-          {fileList.length >= limit ? null : uploadButton}
-        </MyUpload>
-      </ImgCrop>
-      {previewImage && (
-        <Image
-          wrapperStyle={{ display: "none" }}
-          preview={{
-            visible: previewOpen,
-            onVisibleChange: (visible) => setPreviewOpen(visible),
-            afterOpenChange: (visible) => !visible && setPreviewImage(""),
-          }}
-          src={previewImage}
-        />
+          <MyUpload
+            type="drag"
+            listType="picture-card"
+            showUploadList={false}
+            customRequest={(event: any) => onChangeUpload(event.file)}
+            {...myUploadProps}
+          >
+            {uploadButton}
+          </MyUpload>
+        </ImgCrop>
+      )}
+      {imageSrc && (
+        <div className="rounded overflow-hidden relative p-1 bg-slate-200 flex justify-center items-center">
+          <Image
+            className="rounded-lg max-h-64 max-h-28"
+            src={getUrlImage(imageSrc)}
+          />
+          <MyButtonHTML
+            onClick={() => setImageSrc("")}
+            className="absolute bg-gray-300 opacity-80 hover:scale-105 transition rounded-full p-3 right-3 top-3"
+          >
+            <LiaTimesSolid size={16} />
+          </MyButtonHTML>
+        </div>
       )}
     </>
   );
 };
 
-export default MyUploadImage;
+export default MyUploadImageSingle;

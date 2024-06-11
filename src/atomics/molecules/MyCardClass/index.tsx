@@ -1,19 +1,19 @@
-import MyIconWithDescription from "@/atomics/atoms/MyIconWithDescription";
-import { OBJ_SESSION_PER_WEEK } from "@/constants/common";
-import { TClass } from "@/services/classes/classes.type";
-import { FaRegMoneyBill1 } from "react-icons/fa6";
-import { HiOutlineHome } from "react-icons/hi2";
-import { LuBook } from "react-icons/lu";
-import { MdTransgender } from "react-icons/md";
-import { RiChatVoiceLine } from "react-icons/ri";
-import { SiGoogleclassroom } from "react-icons/si";
+import MyAvatar from "@/atomics/atoms/MyAvatar";
+import MyTag from "@/bases/MyTag";
+import { OBJ_SUBJECT } from "@/constants/common";
+import { TClass } from "@/types/entity.type";
+import { getUrlImage } from "@/utils/imageHandler";
+import numberHandler from "@/utils/numberHandler";
+import moment from "moment";
+import ReactHTMLParser from "react-html-parser";
 
-type TMyCardClassProps = {
+export type TMyCardClassProps = {
   classProps: TClass;
+  extendHandler?: ({ _class }: { _class: TClass }) => React.ReactElement;
 };
 
 const MyCardClass: React.FC<TMyCardClassProps> = (props) => {
-  const { classProps } = props;
+  const { classProps, extendHandler } = props;
   const {
     salary,
     sessionPerWeek,
@@ -21,91 +21,51 @@ const MyCardClass: React.FC<TMyCardClassProps> = (props) => {
     addressOfAccount,
     gradeOfStudent,
     teachingMethod,
+    account,
+    subjectClass,
+    describeNote,
     createdBy,
   } = classProps;
 
+  const subjectNames = subjectClass?.map(
+    (subject) => OBJ_SUBJECT?.[subject?.subjectCode]?.label,
+  );
+  const { province, updatedAt, ward } = addressOfAccount;
+
   return (
-    <div className="border-gray-400 shadow-lg bg-white rounded-2xl overflow-hidden flex flex-col justify-between leading-normal">
-      <div className="p-4 flex flex-col gap-2 pt-2">
-        <div className="flex items-center">
-          <div className="text-sm">
-            <a
-              href="#"
-              className="text-gray-900 font-semibold leading-none hover:text-blue-600"
-            >
-              Phụ huynh: {createdBy?.firstName + " " + createdBy?.lastName}
-            </a>
-            <p className="text-gray-600">Aug 18</p>
-          </div>
-        </div>
-        <div className="grid  gap-3 grid-cols-2">
-          <MyIconWithDescription
-            className=""
-            myIconFillProps={{
-              Icon: <FaRegMoneyBill1 size={20} />,
-            }}
-            Title="Lương:"
-            Description={`${salary} VNĐ / Tháng`}
-          />
-          <MyIconWithDescription
-            myIconFillProps={{
-              Icon: <LuBook size={20} />,
-            }}
-            Title="Môn dạy:"
-            Description="Toán, Lý, Hoá"
-          />
-          <MyIconWithDescription
-            myIconFillProps={{
-              Icon: <LuBook size={20} />,
-            }}
-            Title="Số buổi 1 tuần:"
-            Description={
-              OBJ_SESSION_PER_WEEK?.[sessionPerWeek]?.label || sessionPerWeek
-            }
-          />
-          <MyIconWithDescription
-            myIconFillProps={{
-              Icon: <SiGoogleclassroom size={20} />,
-            }}
-            Title="Bé học lớp:"
-            Description="Lớp 1"
-          />
-          <MyIconWithDescription
-            myIconFillProps={{
-              Icon: <MdTransgender size={20} />,
-            }}
-            Title="Giới tính yêu cầu:"
-            Description={requiredGender}
-          />
-          <MyIconWithDescription
-            myIconFillProps={{
-              Icon: <RiChatVoiceLine size={20} />,
-            }}
-            Title="Hình thức dạy:"
-            Description="Offline"
-          />
-          <MyIconWithDescription
-            className="col-span-2"
-            myIconFillProps={{
-              Icon: <HiOutlineHome size={20} />,
-            }}
-            Title="Địa chỉ:"
-            Description="  11 Xô Viết Nghệ Tỉnh, Phường 17, Quận Bình Thạnh, Thành
-        Phố Hồ Chí Minh"
-          />
-        </div>
+    <div className="flex bg-white gap-4 relative group border  p-4 rounded-lg hover:border-blue-500">
+      {typeof extendHandler === "function" &&
+        extendHandler({ _class: classProps })}
+      <div>
+        <MyAvatar
+          rounded="rounded-sm"
+          size="4xl"
+          src={getUrlImage(account?.avatar)}
+          id={account?.id}
+          lastName={account?.lastName}
+        />
+      </div>
+      <div className="flex flex-col gap-3 justify-between">
         <div>
-          <a
-            href="#"
-            className="text-gray-900 font-bold text-lg  hover:text-blue-600 inline-block"
-          >
-            Ghi chú
-          </a>
-          <p className="text-gray-700 text-sm">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Voluptatibus quia, nulla! Maiores et perferendis eaque,
-            exercitationem praesentium nihil.
+          <p className="text-lg">
+            Lớp: {gradeOfStudent} - {teachingMethod} -{" "}
+            {subjectNames.map((subject) => subject).join(", ")}
           </p>
+          <p className="text-blue-700 text-base">
+            Lương: {numberHandler.formatNumber(salary)}/ giờ
+          </p>
+          <p className="line-clamp-2 whitespace-pre-wrap text-base text-gray-900">
+            {describeNote ? ReactHTMLParser(describeNote) : "Không có mô tả"}
+          </p>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          <MyTag size="lg">{`${sessionPerWeek} Buổi /tuần`}</MyTag>
+          <MyTag size="lg">
+            {ward?.fullName}, {province?.fullName}
+          </MyTag>
+          <MyTag size="lg">
+            Cập nhật: {moment(updatedAt).locale("vi").fromNow()}
+          </MyTag>
         </div>
       </div>
     </div>

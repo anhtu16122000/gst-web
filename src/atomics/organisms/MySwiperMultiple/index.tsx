@@ -16,12 +16,10 @@ const MySwiperMultiple: React.FC<TMySwiperMultipleProps> = (props) => {
     <MySwiper
       spaceBetween={30}
       slidesPerView={3}
-      // onSlideChange={() => console.log("slide change")}
       cssMode={true}
       loop={true}
       navigation={true}
       modules={[Navigation, Pagination, Mousewheel, Keyboard]}
-      // onSwiper={(swiper) => console.log(swiper)}
     >
       {SlideItems.map((slideItem, index) => {
         return <SwiperSlide key={index}>{slideItem}</SwiperSlide>;

@@ -1,12 +1,22 @@
+"use client";
+
+import MyImage from "@/bases/MyImage";
 import MyDefaultAvt from "../MyDefaultAvatar";
 
-type TMyAvatarProps = {
+export type TMyAvatarProps = {
   lastName: string;
   id: string;
-  size?: "sm" | "md" | "lg" | "xl" | "2xl";
+  src?: string;
+  rounded?:
+    | "rounded-none"
+    | "rounded-sm"
+    | "rounded-md"
+    | "rounded-lg"
+    | "rounded-full";
+  size?: keyof typeof SIZES;
 };
 
-const SIZES: Record<TMyAvatarProps["size"], any> = {
+const SIZES: Record<any, any> = {
   sm: {
     width: 25,
     height: 25,
@@ -32,12 +42,51 @@ const SIZES: Record<TMyAvatarProps["size"], any> = {
     height: 65,
     size: 22,
   },
+  "3xl": {
+    width: 75,
+    height: 75,
+    size: 26,
+  },
+  "4xl": {
+    width: 85,
+    height: 85,
+    size: 30,
+  },
 };
 
 const MyAvatar: React.FC<TMyAvatarProps> = (props) => {
-  const { lastName = "", id, size = "md" } = props;
+  const {
+    lastName = "",
+    id,
+    size = "md",
+    src,
+    rounded = "rounded-full",
+  } = props;
 
-  return <MyDefaultAvt id={id} lastName={lastName} {...SIZES[size]} />;
+  if (src) {
+    return (
+      <MyImage
+        suppressHydrationWarning
+        viewDetail
+        className={`overflow-hidden ${rounded}`}
+        src={src}
+        style={{
+          objectFit: "cover",
+        }}
+        alt="ảnh đại diện"
+        {...SIZES[size]}
+      />
+    );
+  }
+
+  return (
+    <MyDefaultAvt
+      rounded={rounded}
+      id={id}
+      lastName={lastName}
+      {...SIZES[size]}
+    />
+  );
 };
 
 export default MyAvatar;

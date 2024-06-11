@@ -1,28 +1,16 @@
-import { notificationInstanceRef } from "@/layouts/ClientProvider";
+import { toast } from "sonner";
 
 export const myToast = {
   success: (message) => {
-    notificationInstanceRef?.current?.success({
-      message: message,
-      duration: 3000,
-    });
+    toast.success(message);
   },
   error: (message) => {
-    notificationInstanceRef?.current?.error({
-      message: message,
-      duration: 3000,
-    });
+    toast.error(message);
   },
   warning: (message) => {
-    notificationInstanceRef?.current?.warning({
-      message: message,
-      duration: 3000,
-    });
+    toast.warning(message);
   },
   info: (message) => {
-    notificationInstanceRef?.current?.info({
-      message: message,
-      duration: 3000,
-    });
+    toast.info(message);
   },
 };

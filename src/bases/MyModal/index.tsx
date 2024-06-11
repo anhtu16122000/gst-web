@@ -16,13 +16,14 @@ const MyModal: React.FC<TMyModalProps> = (props) => {
     centered = true,
     okLoading = false,
     okDisabled = false,
-    className,
+    className = "",
     title,
     ...rest
   } = props;
 
   return (
     <Modal
+      zIndex={300}
       okButtonProps={{
         size: "large",
         loading: okLoading,

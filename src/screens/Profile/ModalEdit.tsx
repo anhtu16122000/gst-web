@@ -1,34 +1,73 @@
 "use client";
-import MyInputNumberFormatter from "@/atomics/atoms/MyInputNumberFormatter";
-import MySelectDistricts from "@/atomics/atoms/MySelectDistricts";
-import MySelectProvinces from "@/atomics/atoms/MySelectProvinces";
-import MySelectRequiredGender from "@/atomics/atoms/MySelectRequiredGender";
-import MySelectSessionPerWeek from "@/atomics/atoms/MySelectSessionPerWeek";
-import MySelectSubjects from "@/atomics/atoms/MySelectSubjects";
-import MySelectTeachingMethod from "@/atomics/atoms/MySelectTeachingMethod";
-import MySelectWards from "@/atomics/atoms/MySelectWards";
-import MyUploadImage from "@/atomics/atoms/MyUploadImageSingle";
+import MyFormTutorInfo from "@/atomics/molecules/MyFormTutorInfo";
 import MyButton from "@/bases/MyButton";
-import MyDivider from "@/bases/MyDivider";
-import MyForm from "@/bases/MyForm";
-import MyFormItem from "@/bases/MyFormItem";
-import MyInput from "@/bases/MyInput";
 import MyModal from "@/bases/MyModal";
-import MyTextArea from "@/bases/MyTextArea";
-import { RULE_REQUIRED } from "@/constants/common";
+import accountService from "@/services/account";
+import { myToast } from "@/utils/toastHandler";
 import { EditOutlined } from "@ant-design/icons";
-import { Form } from "antd";
-import { useWatch } from "antd/es/form/Form";
-import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import moment from "moment";
 
-const ModalEdit = () => {
+import { TAccount } from "@/types/entity.type";
+import { Form } from "antd";
+import { useLayoutEffect, useMemo, useState } from "react";
+
+const ModalEdit = ({ account }: { account: TAccount }) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+  const subjectClassCodeTutors = useMemo(
+    () =>
+      account?.tutor?.subjectTutors?.map(({ subjectCode }) => subjectCode) ||
+      [],
+    [account?.tutor?.subjectTutors],
+  );
+  const teachingClassTypeCodes = useMemo(
+    () =>
+      account?.tutor?.teachingClassTypeTutors?.map(
+        ({ teachingClassTypeCode }) => teachingClassTypeCode,
+      ) || [],
+    [account?.tutor?.teachingClassTypeTutors],
+  );
 
-  const provinceCode = useWatch(["provinceCode"], form);
-  const districtCode = useWatch(["districtCode"], form);
+  const handleSubmit = async (dataForm) => {
+    setLoading(true);
+    const callApi = account.tutor?.id
+      ? accountService.editTutor
+      : accountService.createTutor;
+    try {
+      const res = await callApi({
+        ...dataForm,
+      });
+      myToast.success(res.data.message?.[0]);
+      // form.resetFields();
+      queryClient.invalidateQueries({
+        queryKey: ["GET/address-of-account/me"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["GET/account/me"],
+      });
+      setVisible(false);
+      setLoading(false);
+    } catch (error: any) {
+      myToast.error(error?.message?.[0]);
+    }
+    setLoading(false);
+  };
 
-  const handleSubmit = async (dataForm) => {};
+  useLayoutEffect(() => {
+    form.setFieldsValue({
+      ...account,
+      DOB: moment(account.tutor?.DOB),
+      subjectCodes: subjectClassCodeTutors,
+      teachingClassTypeCodes: teachingClassTypeCodes,
+      provinceCode: account.tutor?.province?.code,
+      districtCode: account.tutor?.district?.code,
+      wardCode: account.tutor?.ward?.code,
+      schoolId: account.tutor?.school?.id,
+    });
+  }, [visible, account, form, subjectClassCodeTutors, teachingClassTypeCodes]);
 
   return (
     <>
@@ -37,155 +76,17 @@ const ModalEdit = () => {
         type="primary"
         icon={<EditOutlined />}
       >
-        Chỉnh sửa hồ sơ
+        Cập nhật hồ sơ
       </MyButton>
       <MyModal
         onCancel={() => setVisible(false)}
+        onOk={form.submit}
         width={800}
         title="Chỉnh sửa hồ sơ"
         open={visible}
+        okLoading={loading}
       >
-        <MyForm
-          className="grid grid-cols-2 gap-x-3"
-          form={form}
-          onFinish={handleSubmit}
-        >
-          <MyFormItem
-            name="avatar"
-            className="col-span-2"
-            rules={[RULE_REQUIRED]}
-            label="Avatar"
-            help="Ưu tiên ảnh chân dung, rõ mặt"
-          >
-            <MyUploadImage />
-          </MyFormItem>
-          <MyDivider className="col-span-2">Thông tin cơ bản</MyDivider>
-          <MyFormItem name="salary" rules={[RULE_REQUIRED]} label="Họ và tên">
-            <MyInputNumberFormatter />
-          </MyFormItem>
-
-          <MyFormItem
-            name="sessionPerWeek"
-            rules={[RULE_REQUIRED]}
-            label="Ngày sinh"
-          >
-            <MySelectSessionPerWeek />
-          </MyFormItem>
-          <MyFormItem
-            name="requiredGender"
-            rules={[RULE_REQUIRED]}
-            label="Giới tính"
-          >
-            <MySelectRequiredGender />
-          </MyFormItem>
-          <MyFormItem
-            name="teachingMethod"
-            rules={[RULE_REQUIRED]}
-            label="Email"
-          >
-            <MySelectTeachingMethod />
-          </MyFormItem>
-          <MyFormItem
-            label="Môn dạy"
-            name="subjectCodes"
-            rules={[RULE_REQUIRED]}
-          >
-            <MySelectSubjects allowClear />
-          </MyFormItem>
-          <MyFormItem
-            className="col-span-1"
-            name="address"
-            rules={[RULE_REQUIRED]}
-            label="Mức lương mong muốn"
-          >
-            <MyInputNumberFormatter />
-          </MyFormItem>
-          <MyFormItem
-            className="col-span-2"
-            name="address"
-            rules={[RULE_REQUIRED]}
-            label="Thư giới thiệu"
-          >
-            <MyTextArea rows={4} />
-          </MyFormItem>
-          <MyDivider className="col-span-2">Thông tin liên hệ</MyDivider>
-          <MyFormItem
-            label="Số điện thoại"
-            rules={[RULE_REQUIRED]}
-            name="phoneNumber"
-          >
-            <MyInput />
-          </MyFormItem>
-          <MyFormItem
-            label="Tỉnh/Thành phố"
-            rules={[RULE_REQUIRED]}
-            name="provinceCode"
-          >
-            <MySelectProvinces
-              onChange={() => {
-                form.setFieldsValue({
-                  districtCode: null,
-                  wardCode: null,
-                });
-              }}
-            />
-          </MyFormItem>
-          <MyFormItem
-            label="Quận/Huyện"
-            rules={[RULE_REQUIRED]}
-            name="districtCode"
-          >
-            <MySelectDistricts
-              provinceCode={provinceCode}
-              onChange={() => {
-                form.setFieldValue("wardCode", null);
-              }}
-            />
-          </MyFormItem>
-          <MyFormItem label="Phường/Xã" rules={[RULE_REQUIRED]} name="wardCode">
-            <MySelectWards districtCode={districtCode} />
-          </MyFormItem>
-          <MyFormItem className="col-span-2" name="address" label="Địa chỉ">
-            <MyInput />
-          </MyFormItem>
-          <MyDivider className="col-span-2">Thông tin học vấn</MyDivider>
-          <MyFormItem
-            name="teachingMethod"
-            rules={[RULE_REQUIRED]}
-            label="Sinh viên năm"
-          >
-            <MySelectTeachingMethod />
-          </MyFormItem>
-          <MyFormItem
-            name="teachingMethod"
-            rules={[RULE_REQUIRED]}
-            label="Sinh viên trường"
-          >
-            <MySelectTeachingMethod />
-          </MyFormItem>
-          <MyFormItem
-            className="col-span-2"
-            name="teachingMethod"
-            rules={[RULE_REQUIRED]}
-            label="Sinh viên ngành"
-          >
-            <MySelectTeachingMethod />
-          </MyFormItem>
-          <MyFormItem
-            name="avatar"
-            rules={[RULE_REQUIRED]}
-            label="Mặt trước thẻ sinh viên"
-          >
-            <MyUploadImage />
-          </MyFormItem>
-          <MyFormItem
-            name="avatar"
-            rules={[RULE_REQUIRED]}
-            label="Mặt sau thẻ sinh viên"
-          >
-            <MyUploadImage />
-          </MyFormItem>
-        </MyForm>
+        <MyFormTutorInfo form={form} onFinish={handleSubmit} />
       </MyModal>
     </>
   );

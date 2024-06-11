@@ -1,5 +1,5 @@
 "use client";
-import MyInputPassword from "@/atomics/MyInputPassword";
+import MyInputPassword from "@/atomics/atoms/MyInputPassword";
 import MyButton from "@/bases/MyButton";
 import MyLink from "@/bases/MyLink";
 import accountService from "@/services/account";

@@ -1,23 +1,42 @@
+import MyButtonHTML from "@/bases/MyButtonHTML";
+
 import MyPopover, { TMyPopoverProps } from "@/bases/MyPopover";
-import React, { HTMLAttributes } from "react";
+import React, {
+  Dispatch,
+  HTMLAttributes,
+  SetStateAction,
+  useState,
+} from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
-type TMyPopoverThreeDotProps = {
-  content: React.ReactElement;
+export type TMyPopoverThreeDotProps = {
+  content: ({
+    setOpen,
+  }: {
+    setOpen: Dispatch<SetStateAction<boolean>>;
+  }) => React.ReactElement;
   myPopoverProps?: Omit<TMyPopoverProps, "children">;
+  iconSize?: number;
   className?: HTMLAttributes<HTMLDivElement>["className"];
 };
 
 const MyPopoverThreeDot: React.FC<TMyPopoverThreeDotProps> = (props) => {
-  const { content, myPopoverProps, className = "" } = props;
+  const { content, myPopoverProps, iconSize = 20, className = "" } = props;
+  const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <MyPopover content={content} placement="rightBottom" {...myPopoverProps}>
-      <div
+    <MyPopover
+      open={open}
+      content={() => content({ setOpen })}
+      placement="rightBottom"
+      {...myPopoverProps}
+    >
+      <MyButtonHTML
+        onClick={() => setOpen(true)}
         className={`w-fit p-0.5 absolute top-1 right-1  rounded-full group-hover:bg-slate-100 ${className}`}
       >
-        <BsThreeDotsVertical size={17} />
-      </div>
+        <BsThreeDotsVertical size={iconSize} />
+      </MyButtonHTML>
     </MyPopover>
   );
 };

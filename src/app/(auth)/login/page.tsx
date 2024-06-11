@@ -1,7 +1,7 @@
 import LoginPage from "@/screens/Login";
 
-const page = () => {
-  return <LoginPage />;
+const page = (props) => {
+  return <LoginPage {...props} />;
 };
 
 export default page;

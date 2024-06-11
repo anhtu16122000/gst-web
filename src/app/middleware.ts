@@ -6,10 +6,12 @@ const allow = ["/login", "/register"];
 
 const productEditRegex = /^\/products\/\d+\/edit$/;
 
+export let globalAccessToken: any = "";
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get("access_token");
+  globalAccessToken = accessToken;
   if (accessToken?.value && URL_AUTH.includes(pathname)) {
     // return NextResponse.redirect(new URL('/', request.url));
   }

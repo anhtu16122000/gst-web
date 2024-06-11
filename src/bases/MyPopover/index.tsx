@@ -1,10 +1,18 @@
 import { Popover, PopoverProps } from "antd";
-import React from "react";
+import { TooltipRef } from "antd/es/tooltip";
+import { ForwardRefRenderFunction, forwardRef } from "react";
 
 export type TMyPopoverProps = {} & PopoverProps;
 
-const MyPopover: React.FC<TMyPopoverProps> = ({ children, ...rest }) => {
-  return <Popover {...rest}>{children}</Popover>;
+const MyPopover: ForwardRefRenderFunction<TooltipRef, TMyPopoverProps> = (
+  { children, ...rest },
+  ref,
+) => {
+  return (
+    <Popover {...rest} ref={ref}>
+      {children}
+    </Popover>
+  );
 };
 
-export default MyPopover;
+export default forwardRef(MyPopover);

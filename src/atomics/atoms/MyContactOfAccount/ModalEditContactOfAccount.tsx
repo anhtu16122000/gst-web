@@ -1,4 +1,5 @@
 import MyFormContactOfAccount from "@/atomics/molecules/MyFormContactAccount";
+import MyButtonHTML from "@/bases/MyButtonHTML";
 import MyModal from "@/bases/MyModal";
 import addressOfAccountService from "@/services/addressOfAccount";
 import { myToast } from "@/utils/toastHandler";
@@ -16,12 +17,13 @@ type TModalEditContactOfAccountProps = {
     wardCode: string;
     provinceCode: string;
   };
+  setOpen: (value: boolean) => void;
 };
 
 const ModalEditContactOfAccount: React.FC<TModalEditContactOfAccountProps> = (
   props,
 ) => {
-  const { currentData } = props;
+  const { currentData, setOpen } = props;
 
   const [form] = Form.useForm();
   const [visible, setVisible] = useState<boolean>(false);
@@ -54,12 +56,15 @@ const ModalEditContactOfAccount: React.FC<TModalEditContactOfAccountProps> = (
 
   return (
     <>
-      <div
-        onClick={() => setVisible(true)}
+      <MyButtonHTML
+        onClick={() => {
+          setVisible(true);
+          setOpen(false);
+        }}
         className="flex items-center p-2 hover:bg-slate-100 cursor-pointer rounded-lg gap-1"
       >
         <FiEdit size={16} className="text-amber-500	" /> <span>Chỉnh sửa</span>
-      </div>
+      </MyButtonHTML>
       <MyModal
         title="Chỉnh sửa địa chỉ"
         onCancel={() => setVisible(false)}

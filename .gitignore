@@ -6,6 +6,8 @@
 .pnp.js
 .yarn/install-state.gz
 
+/bun.lockb
+
 .env
 
 # testing
@@ -17,6 +19,8 @@
 
 # production
 /build
+
+
 
 # misc
 .DS_Store

@@ -1,10 +1,8 @@
 import MyButton from "@/bases/MyButton";
-import { addTokenInstance } from "@/services";
 import accountService from "@/services/account";
+import authHandler from "@/utils/authHandler";
 import { myToast } from "@/utils/toastHandler";
-import { useQueryClient } from "@tanstack/react-query";
 import { InputOTP } from "antd-input-otp";
-import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
@@ -13,7 +11,6 @@ import { STEP } from "./SignInForm";
 const OTPForm = ({ setStep, email }) => {
   const [otp, setOtp] = useState<string[]>();
   const [loading, setLoading] = useState<boolean>(false);
-  const queryClient = useQueryClient();
   const router = useRouter();
 
   const handleSubmit = async () => {
@@ -24,12 +21,10 @@ const OTPForm = ({ setStep, email }) => {
         otp: otp?.join("") as string,
       });
       myToast.success(res?.data?.message?.[0]);
-      await setCookie("access_token", res.data.data?.accessToken);
-      addTokenInstance(res.data.data?.accessToken as string);
+      authHandler.setToken(res.data.data?.accessToken);
+      authHandler.injectTokenClientSide(res.data.data?.accessToken);
+
       router.replace("/");
-      queryClient.invalidateQueries({
-        queryKey: ["GET/account/me"],
-      });
     } catch (error: any) {
       myToast.error(error?.message[0]);
     }

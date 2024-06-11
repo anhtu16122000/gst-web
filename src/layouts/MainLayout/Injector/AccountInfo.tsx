@@ -1,34 +1,37 @@
+import MyAvatar from "@/atomics/atoms/MyAvatar";
 import MyDivider from "@/bases/MyDivider";
-import MyImage from "@/bases/MyImage";
 import MyPopover from "@/bases/MyPopover";
-import { TMeAccount } from "@/services/account/account.type";
-import { handleShallowLogout } from "@/utils/common";
+import { AccountType } from "@/constants/enum";
+import { TAccount } from "@/types/entity.type";
+import authHandler from "@/utils/authHandler";
+
+import { getUrlImage } from "@/utils/imageHandler";
 import { useRouter } from "next/navigation";
 import { CgProfile } from "react-icons/cg";
-
 import { IoChevronDown } from "react-icons/io5";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 
-const AccountInfo = ({ account }: { account: TMeAccount }) => {
-  const { avatar, email, fullName } = account;
+const AccountInfo = ({ account }: { account: TAccount }) => {
+  const { avatar, email, lastName, firstName, type } = account || {};
   const router = useRouter();
-  console.log("avatar", avatar);
   const logout = () => {
     router.push("/login");
-    handleShallowLogout();
+    authHandler.handleShallowLogout();
   };
 
   const content = (
     <div className="flex flex-col gap-2">
       <div className="px-3 py-2">
-        <p className="text-lg text-blue-600">{fullName}</p>
+        <p className="text-lg text-blue-600">{`${firstName} ${lastName}`}</p>
         <p className="text-md text-gray-600">{email}</p>
       </div>
       <MyDivider />
       <div className="flex flex-col gap-3">
         <div
           onClick={() => {
-            router.push("/profile");
+            router.push(
+              type === AccountType.CUSTOMER ? "information" : "/profile",
+            );
           }}
           className="flex cursor-pointer gap-2 px-3 py-2 bg-gray-50 rounded-lg items-center"
         >
@@ -48,16 +51,15 @@ const AccountInfo = ({ account }: { account: TMeAccount }) => {
 
   return (
     <MyPopover className="group" content={content}>
-      <div className="bg-slate-100 px-2.5 py-2  rounded-3xl p-ripple flex cursor-pointer gap-2 items-center">
-        <MyImage
-          className="rounded-full"
-          // src={account?.avatar}
-          alt={`ảnh đại hiện của ${account?.fullName}`}
-          width={32}
-          height={32}
+      <div className="bg-slate-100 px-2.5 py-2.5 rounded-3xl p-ripple flex cursor-pointer gap-2 items-center">
+        <MyAvatar
+          size="sm"
+          src={getUrlImage(account?.avatar)}
+          id={account?.id}
+          lastName={account?.lastName}
         />
         <div>
-          <div>{account?.fullName}</div>
+          <div>{`${firstName} ${lastName}`}</div>
         </div>
         <IoChevronDown className="group-hover:rotate-[-180deg] transition	 text-blue-600" />
       </div>

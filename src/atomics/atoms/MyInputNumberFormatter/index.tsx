@@ -1,3 +1,4 @@
+"use client";
 import MyInputNumber, { TMyInputNumberProps } from "@/bases/MyInputNumber";
 import React from "react";
 

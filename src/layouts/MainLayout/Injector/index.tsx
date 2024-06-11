@@ -1,13 +1,14 @@
 "use client";
-import useMySelf from "@/hooks/useMySeft";
+
+import { useMySelf } from "@/zustand/store";
 import ModalChooseTypeAccount from "./ModalChooseTypeAccount";
 
 const Injector = () => {
-  const { data, isAuthenticated, isLoading } = useMySelf();
+  const { data } = useMySelf();
   const fullName = `${data?.firstName || ""} ${data?.lastName || ""}`;
   return (
     <>
-      {isAuthenticated && !isLoading && !Boolean(data?.type) && (
+      {data.id && !Boolean(data?.type) && (
         <ModalChooseTypeAccount accountId={data?.id} fullName={fullName} />
       )}
     </>

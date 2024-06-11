@@ -1,3 +1,4 @@
+import MyButtonHTML from "@/bases/MyButtonHTML";
 import addressOfAccountService from "@/services/addressOfAccount";
 import {
   TDistrict,
@@ -7,6 +8,7 @@ import {
 import { confirmDelete } from "@/utils/confirm";
 import { myToast } from "@/utils/toastHandler";
 import { useQueryClient } from "@tanstack/react-query";
+import { HTMLAttributes } from "react";
 import { FaLocationDot, FaPhone } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import MyPopoverThreeDot from "../MyPopoverThreeDot";
@@ -19,11 +21,22 @@ type TMyContactOfAccountProps = {
   district: Partial<TDistrict>;
   ward: Partial<TWard>;
   province: Partial<TProvince>;
+  className?: HTMLAttributes<HTMLDivElement>["className"];
 };
 
 const MyContactOfAccount: React.FC<TMyContactOfAccountProps> = (props) => {
-  const { contactId, phoneNumber, address, ward, district, province } = props;
+  const {
+    className = "",
+    contactId,
+    phoneNumber,
+    address,
+    ward,
+    district,
+    province,
+  } = props;
+
   const queryClient = useQueryClient();
+
   const handleDelete = async (id) => {
     try {
       const res = await addressOfAccountService.meDelete(id);
@@ -36,9 +49,10 @@ const MyContactOfAccount: React.FC<TMyContactOfAccountProps> = (props) => {
     }
   };
 
-  const content = (
+  const content = ({ setOpen }) => (
     <div className="flex flex-col gap-1">
       <ModalEditContactOfAccount
+        setOpen={setOpen}
         currentData={{
           address: address,
           phoneNumber: phoneNumber,
@@ -48,7 +62,7 @@ const MyContactOfAccount: React.FC<TMyContactOfAccountProps> = (props) => {
           provinceCode: province.code as string,
         }}
       />
-      <div
+      <MyButtonHTML
         onClick={() =>
           confirmDelete({
             onOk: () => handleDelete(contactId),
@@ -57,13 +71,15 @@ const MyContactOfAccount: React.FC<TMyContactOfAccountProps> = (props) => {
         className="flex items-center p-2 hover:bg-slate-100 cursor-pointer rounded-lg gap-1"
       >
         <MdDelete size={18} className="text-rose-500	" /> <span>Xoá</span>
-      </div>
+      </MyButtonHTML>
     </div>
   );
 
   return (
-    <div className=" bg-[#fff] w-full group  relative p-3 rounded-lg">
-      <MyPopoverThreeDot content={content} />
+    <div
+      className={`bg-[#fff] w-full h-full group  relative p-3 rounded-lg ${className}`}
+    >
+      <MyPopoverThreeDot className="top-2 right-2" content={content} />
       <div className="flex gap-2 items-center">
         <FaPhone fontSize={13} /> <span>{phoneNumber}</span>
       </div>

@@ -29,8 +29,6 @@ export const confirmDelete = (params?: TConfirmDelete) => {
     okType: "danger",
     cancelText: "Huỷ",
     onOk,
-    onCancel() {
-      console.log("Cancel");
-    },
+    onCancel() {},
   });
 };

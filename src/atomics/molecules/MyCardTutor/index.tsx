@@ -1,66 +1,118 @@
-"use server";
+"use client";
+import MyAvatar from "@/atomics/atoms/MyAvatar";
+import MyButtonHTML from "@/bases/MyButtonHTML";
+import MyLink from "@/bases/MyLink";
+import { OBJ_SUBJECT, OBJ_TEACHING_CLASS_TYPE } from "@/constants/common";
+import { TAccount } from "@/types/entity.type";
+import { getUrlImage } from "@/utils/imageHandler";
+import numberHandler from "@/utils/numberHandler";
+import { CheckCircleTwoTone } from "@ant-design/icons";
+import HTMLReactParser from "html-react-parser";
+import { FaLocationDot } from "react-icons/fa6";
+import { IoSchool } from "react-icons/io5";
+import { MdCheck } from "react-icons/md";
+import RightButtonSection from "./RightButtonSection";
 
-const MyCardTutor = () => {
+type TMyCardTutorProps = {
+  account: TAccount;
+};
+
+const MyCardTutor: React.FC<TMyCardTutorProps> = ({ account }) => {
+  const { firstName, lastName, id, tutor, avatar } = account || {};
+  const {
+    teachingClassTypeTutors,
+    subjectTutors,
+    district,
+    province,
+    school,
+    note,
+    expectedSalary,
+  } = tutor || {};
+  const fullName = `${firstName} ${lastName}`;
+  const objSubjects =
+    subjectTutors?.map((item) => OBJ_SUBJECT[item.subjectCode]) || [];
+  const objClassTutors =
+    teachingClassTypeTutors?.map(
+      (item) => OBJ_TEACHING_CLASS_TYPE?.[item.teachingClassTypeCode],
+    ) || [];
+
   return (
-    <div className="rounded overflow-hidden shadow-lg flex flex-col">
-      <div className="relative">
-        <a>
-          <img
-            className="w-full"
-            src="https://images.pexels.com/photos/61180/pexels-photo-61180.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500"
-            alt="Sunset in the mountains"
-          />
-          <div className="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
-        </a>
-        <a href="#!">
-          <div className="text-xs absolute top-0 right-0 bg-blue-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-blue-600 transition duration-500 ease-in-out">
-            Cooking
+    <div className="p-4 border flex bg-white rounded-lg flex-col gap-3 hover:border-blue-500">
+      <div className="flex justify-between items-center gap-2">
+        <div className="flex gap-2  items-center">
+          <div>
+            <MyAvatar
+              size="2xl"
+              src={getUrlImage(avatar)}
+              id={id}
+              lastName={`Ảnh đại diện ${fullName}`}
+            />
           </div>
-        </a>
+          <div>
+            <MyLink
+              href={`/tutors/${tutor?.id}`}
+              DisplayComponent={
+                <p className="font-medium  hover:underline cursor-pointer">
+                  {fullName}
+                </p>
+              }
+            />
+            <div className="flex text-gray-600 gap-0.5 items-center">
+              <FaLocationDot className="" size={15} />
+              <span className=" font-normal">
+                {district?.fullName}, {province?.fullName}
+              </span>
+            </div>
+            <div className="text-blue-600 flex gap-0.5 items-center">
+              <IoSchool />
+              <p className="text-md">{school?.name}</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <RightButtonSection />
+        </div>
       </div>
-      <div className="px-6 py-4 mb-auto">
-        <a className="font-medium text-lg inline-block hover:text-blue-600 transition duration-500 ease-in-out inline-block mb-2">
-          Simplest Salad Recipe ever
-        </a>
-        <p className="text-gray-500 text-sm">
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry.
-        </p>
+      <div className="flex gap-10">
+        <div>
+          <div className="flex items-center gap-1">
+            <span>Lương: </span>
+            <p>
+              {expectedSalary
+                ? `${numberHandler.formatNumber(expectedSalary)} / Tháng`
+                : "Không có"}
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-3">
+          {objClassTutors?.map(({ label, value }) => {
+            return (
+              <div
+                key={value}
+                className="flex gap-0.5 items-center text-gray-700"
+              >
+                <MdCheck /> {label}
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <div className="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
-        <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-          <svg
-            height="13px"
-            width="13px"
-            version="1.1"
-            id="Layer_1"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g>
-              <g>
-                <path d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256 c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128 c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z"></path>
-              </g>
-            </g>
-          </svg>
-          <span className="ml-1">6 mins ago</span>
-        </span>
-
-        <span className="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-          <svg
-            className="h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-            ></path>
-          </svg>
-          <span className="ml-1">39 Comments</span>
-        </span>
+      <div className="flex gap-2">
+        {objSubjects.map(({ label, value }) => {
+          return (
+            <MyButtonHTML
+              key={value}
+              className="rounded-full px-4 py-1 border border-gray-300 		 bg-gray-50"
+            >
+              {label}
+            </MyButtonHTML>
+          );
+        })}
+      </div>
+      <div>{note ? HTMLReactParser(note) : "Không có"}</div>
+      <div className="text-sm  text-green-600 flex gap-0.5 ">
+        <CheckCircleTwoTone twoToneColor="#2ab93d" />
+        <span>Hồ sơ đạt chuẩn</span>
       </div>
     </div>
   );

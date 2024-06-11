@@ -1,12 +1,9 @@
 "use client";
-import MyInputPassword from "@/atomics/MyInputPassword";
+import MyInputPassword from "@/atomics/atoms/MyInputPassword";
 import MyButton from "@/bases/MyButton";
-import { addTokenInstance } from "@/services";
 import accountService from "@/services/account";
+import authHandler from "@/utils/authHandler";
 import { myToast } from "@/utils/toastHandler";
-import { useQueryClient } from "@tanstack/react-query";
-import { setCookie } from "cookies-next";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -17,7 +14,6 @@ type Inputs = {
 };
 
 const LoginForm = () => {
-  const queryClient = useQueryClient();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -43,12 +39,9 @@ const LoginForm = () => {
         username: data.email,
       });
       myToast.success(res?.data?.message?.[0]);
-      await setCookie("access_token", res.data.data?.accessToken);
-      addTokenInstance(res.data.data?.accessToken as string);
+      authHandler.setToken(res.data.data?.accessToken);
+      authHandler.injectTokenClientSide(res.data.data?.accessToken);
       router.replace("/");
-      queryClient.invalidateQueries({
-        queryKey: ["GET/account/me"],
-      });
     } catch (error: any) {
       myToast.error(error?.message?.[0]);
     }
@@ -63,11 +56,6 @@ const LoginForm = () => {
     );
   };
 
-  const loginByProvider = (provider) => {
-    signIn(provider, {
-      callbackUrl: "/",
-    });
-  };
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

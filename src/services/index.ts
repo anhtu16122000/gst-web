@@ -3,21 +3,6 @@ import axios, { AxiosResponse } from "axios";
 const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API || "";
 const BACKEND_VERSION = process.env.NEXT_PUBLIC_BACKEND_VERSION || "";
 
-export type TMyPagination<T> = {
-  page: number;
-  limit: number;
-} & T;
-
-export type TApiResponse<T = any> = {
-  data?: T;
-  message?: string[] | string;
-  statusCode?: number;
-};
-export type TErrorResponse = {
-  message?: string[] | string;
-  statusCode?: number;
-};
-
 const instance = axios.create({
   baseURL: `${BACKEND_API}/${BACKEND_VERSION}`,
   timeout: 10000, // Timeout sau 10 giây
@@ -33,7 +18,6 @@ export const addTokenInstance = (token: string) => {
 instance.interceptors.request.use(
   async (config) => {
     // Do something before request is sent
-
     return config;
   },
   function (error) {
