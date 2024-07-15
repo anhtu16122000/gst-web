@@ -5,7 +5,7 @@ import MyModal from "@/bases/MyModal";
 
 import MyFormClass from "@/atomics/molecules/MyFormClass";
 import { MyCardCustomerDetailTab } from "@/atomics/organisms/MyCardCustomerDetail";
-import { notificationInstanceRef } from "@/layouts/ClientProvider";
+
 import classesService from "@/services/classes";
 import { TAccount } from "@/types/entity.type";
 import { myToast } from "@/utils/toastHandler";
@@ -23,9 +23,7 @@ const ModalAddClass = ({ setTab }: { account: TAccount; setTab }) => {
     setLoading(true);
     try {
       const res = await classesService.create(dataForm);
-      notificationInstanceRef.current.success({
-        message: res.data.message?.[0],
-      });
+      myToast.success(res.data.message?.[0]);
       setVisible(false);
       form.resetFields();
       router.refresh();

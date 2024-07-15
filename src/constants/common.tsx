@@ -1,12 +1,20 @@
+import { TUTOR_PROFILE_STATUS } from "@/types/enum";
 import { VIETNAMESE_PHONE_NUMBER_REGEX } from "@/utils/common";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 import {
   AccountType,
   GENDER,
   REQUIRED_GENDER,
   SUBJECT,
   TEACHING_METHOD,
+  TUTOR_MAJOR,
   TeachingClassType,
 } from "./enum";
+import MyTag from "@/bases/MyTag";
 
 const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API || "";
 const BACKEND_VERSION = process.env.NEXT_PUBLIC_BACKEND_VERSION || "";
@@ -301,140 +309,166 @@ export const OBJ_TUTOR_STUDENT_YEAR = {
 };
 
 export const OBJ_TUTOR_MAJOR = {
-  PEDAGOGY_MATHEMATICS: {
-    label: "Sư Phạm Toán học",
-    value: "PEDAGOGY_MATHEMATICS",
+  [TUTOR_MAJOR.PEDAGOGY_MATHEMATICS]: {
+    label: "Sư Phạm toán",
+    value: TUTOR_MAJOR.PEDAGOGY_MATHEMATICS,
   },
-  PEDAGOGY_PHYSICS: {
-    label: "Sư Phạm Vật Lý",
-    value: "PEDAGOGY_PHYSICS",
-  },
-  PEDAGOGY_CHEMISTRY: {
+  [TUTOR_MAJOR.PEDAGOGY_CHEMISTRY]: {
     label: "Sư Phạm Hóa Học",
-    value: "PEDAGOGY_CHEMISTRY",
+    value: TUTOR_MAJOR.PEDAGOGY_CHEMISTRY,
   },
-  PEDAGOGY_ENGLISH: {
+  [TUTOR_MAJOR.PEDAGOGY_ENGLISH]: {
     label: "Sư Phạm Tiếng Anh",
-    value: "PEDAGOGY_ENGLISH",
+    value: TUTOR_MAJOR.PEDAGOGY_ENGLISH,
   },
-  PEDAGOGY_COMPUTER_SCIENCE: {
+  [TUTOR_MAJOR.PEDAGOGY_COMPUTER_SCIENCE]: {
     label: "Sư Phạm Tin Học",
-    value: "PEDAGOGY_COMPUTER_SCIENCE",
+    value: TUTOR_MAJOR.PEDAGOGY_COMPUTER_SCIENCE,
   },
-  PEDAGOGY_LITERATURE: {
+  [TUTOR_MAJOR.PEDAGOGY_LITERATURE]: {
     label: "Sư Phạm Ngữ Văn",
-    value: "PEDAGOGY_LITERATURE",
+    value: TUTOR_MAJOR.PEDAGOGY_LITERATURE,
   },
-  PEDAGOGY_HISTORY: {
+  [TUTOR_MAJOR.PEDAGOGY_HISTORY]: {
     label: "Sư Phạm Lịch Sử",
-    value: "PEDAGOGY_HISTORY",
+    value: TUTOR_MAJOR.PEDAGOGY_HISTORY,
   },
-  PEDAGOGY_GEOGRAPHY: {
+  [TUTOR_MAJOR.PEDAGOGY_GEOGRAPHY]: {
     label: "Sư Phạm Địa Lý",
-    value: "PEDAGOGY_GEOGRAPHY",
+    value: TUTOR_MAJOR.PEDAGOGY_GEOGRAPHY,
   },
-  PEDAGOGY_BIOLOGY: {
+  [TUTOR_MAJOR.PEDAGOGY_BIOLOGY]: {
     label: "Sư Phạm Sinh Học",
-    value: "PEDAGOGY_BIOLOGY",
+    value: TUTOR_MAJOR.PEDAGOGY_BIOLOGY,
   },
-  PEDAGOGY_MUSIC: {
+  [TUTOR_MAJOR.PEDAGOGY_MUSIC]: {
     label: "Sư Phạm Âm Nhạc",
-    value: "PEDAGOGY_MUSIC",
+    value: TUTOR_MAJOR.PEDAGOGY_MUSIC,
   },
-  EARLY_CHILDHOOD_EDUCATION: {
+  [TUTOR_MAJOR.EARLY_CHILDHOOD_EDUCATION]: {
     label: "Giáo Dục Mầm Non",
-    value: "EARLY_CHILDHOOD_EDUCATION",
+    value: TUTOR_MAJOR.EARLY_CHILDHOOD_EDUCATION,
   },
-  PEDAGOGY_EARLY_CHILDHOOD: {
-    label: "Sư Phạm Mầm Non",
-    value: "PEDAGOGY_EARLY_CHILDHOOD",
+  [TUTOR_MAJOR.PEDAGOGY_EARLY_CHILDHOOD]: {
+    label: "Sư Phạm Giáo Dục Mầm Non",
+    value: TUTOR_MAJOR.PEDAGOGY_EARLY_CHILDHOOD,
   },
-  ELEMENTARY_EDUCATION: {
+  [TUTOR_MAJOR.ELEMENTARY_EDUCATION]: {
     label: "Giáo Dục Tiểu Học",
-    value: "ELEMENTARY_EDUCATION",
+    value: TUTOR_MAJOR.ELEMENTARY_EDUCATION,
   },
-  PEDAGOGY_ELEMENTARY: {
-    label: "Sư Phạm Tiểu Học",
-    value: "PEDAGOGY_ELEMENTARY",
+  [TUTOR_MAJOR.PEDAGOGY_ELEMENTARY]: {
+    label: "Sư Phạm Giáo Dục Tiểu Học",
+    value: TUTOR_MAJOR.PEDAGOGY_ELEMENTARY,
   },
-  SPECIAL_EDUCATION: {
+  [TUTOR_MAJOR.SPECIAL_EDUCATION]: {
     label: "Giáo Dục Đặc Biệt",
-    value: "SPECIAL_EDUCATION",
+    value: TUTOR_MAJOR.SPECIAL_EDUCATION,
   },
-  ENGLISH_LANGUAGE: {
+  [TUTOR_MAJOR.ENGLISH_LANGUAGE]: {
     label: "Ngôn Ngữ Anh",
-    value: "ENGLISH_LANGUAGE",
+    value: TUTOR_MAJOR.ENGLISH_LANGUAGE,
   },
-  BUSINESS_ENGLISH: {
+  [TUTOR_MAJOR.BUSINESS_ENGLISH]: {
     label: "Tiếng Anh Thương Mại",
-    value: "BUSINESS_ENGLISH",
+    value: TUTOR_MAJOR.BUSINESS_ENGLISH,
   },
-  JAPANESE_LANGUAGE: {
+  [TUTOR_MAJOR.JAPANESE_LANGUAGE]: {
     label: "Ngôn Ngữ Nhật",
-    value: "JAPANESE_LANGUAGE",
+    value: TUTOR_MAJOR.JAPANESE_LANGUAGE,
   },
-  JAPANESE_STUDIES: {
+  [TUTOR_MAJOR.JAPANESE_STUDIES]: {
     label: "Nhật Bản Học",
-    value: "JAPANESE_STUDIES",
+    value: TUTOR_MAJOR.JAPANESE_STUDIES,
   },
-  PEDAGOGY_CHINESE_LANGUAGE: {
-    label: "Sư Phạm Tiếng Trung Quốc",
-    value: "PEDAGOGY_CHINESE_LANGUAGE",
+  [TUTOR_MAJOR.PEDAGOGY_CHINESE_LANGUAGE]: {
+    label: "Sư Phạm Tiếng Trung",
+    value: TUTOR_MAJOR.PEDAGOGY_CHINESE_LANGUAGE,
   },
-  CHINESE_LANGUAGE: {
-    label: "Ngôn Ngữ Trung Quốc",
-    value: "CHINESE_LANGUAGE",
+  [TUTOR_MAJOR.CHINESE_LANGUAGE]: {
+    label: "Ngôn Ngữ Trung",
+    value: TUTOR_MAJOR.CHINESE_LANGUAGE,
   },
-  MATH_COMPUTER_SCIENCE: {
-    label: "Toán - Tin",
-    value: "MATH_COMPUTER_SCIENCE",
+  [TUTOR_MAJOR.MATH_COMPUTER_SCIENCE]: {
+    label: "Toán Tin",
+    value: TUTOR_MAJOR.MATH_COMPUTER_SCIENCE,
   },
-  INFORMATION_TECHNOLOGY: {
+  [TUTOR_MAJOR.INFORMATION_TECHNOLOGY]: {
     label: "Công Nghệ Thông Tin",
-    value: "INFORMATION_TECHNOLOGY",
+    value: TUTOR_MAJOR.INFORMATION_TECHNOLOGY,
   },
-  ACCOUNTING: {
+  [TUTOR_MAJOR.ACCOUNTING]: {
     label: "Kế Toán",
-    value: "ACCOUNTING",
+    value: TUTOR_MAJOR.ACCOUNTING,
   },
-  AUDIT: {
+  [TUTOR_MAJOR.AUDIT]: {
     label: "Kiểm Toán",
-    value: "AUDIT",
+    value: TUTOR_MAJOR.AUDIT,
   },
-  ACCOUNTING_AUDIT: {
+  [TUTOR_MAJOR.ACCOUNTING_AUDIT]: {
     label: "Kế Toán - Kiểm Toán",
-    value: "ACCOUNTING_AUDIT",
+    value: TUTOR_MAJOR.ACCOUNTING_AUDIT,
   },
-  FINANCE_BANKING: {
-    label: "Tài Chính Ngân Hàng",
-    value: "FINANCE_BANKING",
+  [TUTOR_MAJOR.FINANCE_BANKING]: {
+    label: "Tài Chính - Ngân Hàng",
+    value: TUTOR_MAJOR.FINANCE_BANKING,
   },
-  BUSINESS_MANAGEMENT: {
+  [TUTOR_MAJOR.BUSINESS_MANAGEMENT]: {
     label: "Quản Trị Kinh Doanh",
-    value: "BUSINESS_MANAGEMENT",
+    value: TUTOR_MAJOR.BUSINESS_MANAGEMENT,
   },
-  KOREAN_LANGUAGE: {
-    label: "Ngôn Ngữ Hàn Quốc",
-    value: "KOREAN_LANGUAGE",
+  [TUTOR_MAJOR.KOREAN_LANGUAGE]: {
+    label: "Ngôn Ngữ Hàn",
+    value: TUTOR_MAJOR.KOREAN_LANGUAGE,
   },
-  RUSSIAN_LANGUAGE: {
+  [TUTOR_MAJOR.RUSSIAN_LANGUAGE]: {
     label: "Ngôn Ngữ Nga",
-    value: "RUSSIAN_LANGUAGE",
+    value: TUTOR_MAJOR.RUSSIAN_LANGUAGE,
   },
-  PEDAGOGY_RUSSIAN_LANGUAGE: {
+  [TUTOR_MAJOR.PEDAGOGY_RUSSIAN_LANGUAGE]: {
     label: "Sư Phạm Tiếng Nga",
-    value: "PEDAGOGY_RUSSIAN_LANGUAGE",
+    value: TUTOR_MAJOR.PEDAGOGY_RUSSIAN_LANGUAGE,
   },
-  FRENCH_LANGUAGE: {
+  [TUTOR_MAJOR.FRENCH_LANGUAGE]: {
     label: "Ngôn Ngữ Pháp",
-    value: "FRENCH_LANGUAGE",
+    value: TUTOR_MAJOR.FRENCH_LANGUAGE,
   },
-  PEDAGOGY_FRENCH_LANGUAGE: {
+  [TUTOR_MAJOR.PEDAGOGY_FRENCH_LANGUAGE]: {
     label: "Sư Phạm Tiếng Pháp",
-    value: "PEDAGOGY_FRENCH_LANGUAGE",
+    value: TUTOR_MAJOR.PEDAGOGY_FRENCH_LANGUAGE,
   },
-  FOREIGN_LANGUAGES: {
+  [TUTOR_MAJOR.FOREIGN_LANGUAGES]: {
     label: "Ngoại Ngữ",
-    value: "FOREIGN_LANGUAGES",
+    value: TUTOR_MAJOR.FOREIGN_LANGUAGES,
+  },
+};
+
+export const OBJECT_TUTOR_PROFILE_STATUS = {
+  [TUTOR_PROFILE_STATUS.WAIT_FOR_APPROVE]: {
+    label: "Chờ duyệt",
+    value: TUTOR_PROFILE_STATUS.WAIT_FOR_APPROVE,
+    tag: (
+      <MyTag icon={<SyncOutlined spin />} color="processing">
+        Chờ duyệt
+      </MyTag>
+    ),
+  },
+  [TUTOR_PROFILE_STATUS.APPROVED]: {
+    label: "Đã duyệt",
+    value: TUTOR_PROFILE_STATUS.APPROVED,
+    tag: (
+      <MyTag icon={<CheckCircleOutlined />} color="success">
+        Đã duyệt
+      </MyTag>
+    ),
+  },
+  [TUTOR_PROFILE_STATUS.REJECTED]: {
+    label: "Từ chối",
+    value: TUTOR_PROFILE_STATUS.REJECTED,
+    tag: (
+      <MyTag icon={<CloseCircleOutlined />} color="error">
+        Từ chối
+      </MyTag>
+    ),
   },
 };

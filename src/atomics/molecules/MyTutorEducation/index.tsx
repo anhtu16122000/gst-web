@@ -5,7 +5,7 @@ import { getUrlImage } from "@/utils/imageHandler";
 
 type TMyTutorEducationProps = {
   fullName: string;
-  tutor: TTutor;
+  tutor?: TTutor;
 };
 
 const MyTutorEducation: React.FC<TMyTutorEducationProps> = (props) => {

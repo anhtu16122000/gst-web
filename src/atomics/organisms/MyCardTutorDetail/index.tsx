@@ -19,7 +19,7 @@ export type TMyCardTutorDetailProps = {
   tab: MyCardTutorDetailTab;
   onClickInfoTab: (tab: MyCardTutorDetailTab) => void;
   onClickEducationTab: (tab: MyCardTutorDetailTab) => void;
-  tutor: TTutor;
+  tutor?: TTutor;
   myCardProps?: TMyCardProps;
 };
 
@@ -39,7 +39,7 @@ const MyCardTutorDetail: React.FC<TMyCardTutorDetailProps> = (props) => {
           <MyAvatar
             size="2xl"
             src={getUrlImage(account?.avatar)}
-            id={tutor.id}
+            id={account.id}
             lastName={account.lastName}
           />
           <div>
@@ -84,7 +84,9 @@ const MyCardTutorDetail: React.FC<TMyCardTutorDetailProps> = (props) => {
           <MyCard>
             {
               <>
-                {tab === "INFO" && <MyTutorInfo account={account} />}
+                {tab === "INFO" && (
+                  <MyTutorInfo email={account?.email} tutor={account?.tutor} />
+                )}
                 {tab === "EDUCATION" && (
                   <MyTutorEducation
                     fullName={`${account.firstName} ${account.lastName}`}

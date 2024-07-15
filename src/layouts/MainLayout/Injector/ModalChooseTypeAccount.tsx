@@ -5,11 +5,13 @@ import accountService from "@/services/account";
 import { myToast } from "@/utils/toastHandler";
 import { useQueryClient } from "@tanstack/react-query";
 import classNames from "classnames";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FcBusinessman, FcReading } from "react-icons/fc";
 
 const ModalChooseTypeAccount = ({ accountId = "", fullName = "" }) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const [accountType, setAccountType] = useState<AccountType | "">("");
   const [loading, setLoading] = useState(false);
 
@@ -19,9 +21,7 @@ const ModalChooseTypeAccount = ({ accountId = "", fullName = "" }) => {
       const res = await accountService.edit(accountId, {
         type: accountType,
       });
-      queryClient.invalidateQueries({
-        queryKey: ["GET/account/me"],
-      });
+      router.refresh();
       myToast.success("Thông tin tài khoản đã được cập nhật");
     } catch (error: any) {
       myToast.error(error?.message[0]);

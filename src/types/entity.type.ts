@@ -13,6 +13,7 @@ import {
   TWard,
 } from "@/services/vietnamese-region/vietnamese-region.type";
 import { TField } from "./common.type";
+import { TUTOR_PROFILE_STATUS } from "./enum";
 
 export type TCustomer = {
   id: string;
@@ -51,6 +52,7 @@ export type TTutor = TField<{
   fontStudentCardImage: string;
   majorCode: string;
   note: string;
+  profileStatus: TUTOR_PROFILE_STATUS;
   phoneNumber: string;
   studentYear: number;
   teachingMethod: string;

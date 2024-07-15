@@ -8,8 +8,10 @@ import classNames from "classnames";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import AccountInfo from "./Injector/AccountInfo";
+import ClientNav from "./components/ClientNav";
+import Notification from "./components/Notification";
 
-const MenuItem = ({
+export const MenuItem = ({
   isActive = false,
   link = "",
   text = "",
@@ -80,13 +82,9 @@ const Header = () => {
             isActive={"/classes" === pathname}
           />
         </li>
+
         <li>
-          <MenuItem
-            link="/posted"
-            text="Bài đã đăng"
-            theLast
-            isActive={"/posted" === pathname}
-          />
+          <ClientNav pathname={pathname} />
         </li>
       </ul>
     </div>
@@ -116,7 +114,9 @@ const Header = () => {
             <span></span>
           </div>
 
-          <div className="flex gap-2 p-1.5">
+          <div className="flex gap-3 p-1.5">
+            <Notification />
+
             {data.id && <AccountInfo account={data} />}
             {!data.id && (
               <>

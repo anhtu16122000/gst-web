@@ -25,8 +25,6 @@ const MyFormClass: React.FC<TMyFormClassProps> = (props) => {
   const addressOfAccount = useMySelf((state) => state.data.addressOfAccount);
   const sessionPerWeek = Form.useWatch("sessionPerWeek", form);
   const salaryPerHour = Form.useWatch("salary", form);
-  console.log("sessionPerWeek", sessionPerWeek);
-  console.log("salary", salaryPerHour);
 
   const numberSessionPerMonth = sessionPerWeek * 4;
 

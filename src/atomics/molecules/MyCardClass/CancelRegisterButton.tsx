@@ -4,19 +4,19 @@ import MyButtonHTML from "@/bases/MyButtonHTML";
 import { HeartTwoTone } from "@ant-design/icons";
 import { Tooltip } from "antd";
 
-const RightButtonSection = () => {
+const CancelRegisterButton = ({ onClick }) => {
   return (
-    <Tooltip title="Chọn gia sư">
-      <MyButtonHTML>
+    <Tooltip title="Chưa chọn lớp">
+      <MyButtonHTML onClick={onClick}>
         <HeartTwoTone
           style={{
             fontSize: 30,
           }}
-          twoToneColor="#eb2f96"
+          twoToneColor="#dedede"
         />
       </MyButtonHTML>
     </Tooltip>
   );
 };
 
-export default RightButtonSection;
+export default CancelRegisterButton;

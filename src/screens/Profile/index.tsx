@@ -21,7 +21,7 @@ const Profile = () => {
   return (
     <MyContainer>
       <MyCardTutorDetail
-        tutor={data}
+        tutor={data.tutor}
         account={data}
         tab={tab}
         onClickEducationTab={(tab) => {

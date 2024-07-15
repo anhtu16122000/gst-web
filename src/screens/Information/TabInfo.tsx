@@ -1,4 +1,4 @@
-import MyCustomerInfo from "@/atomics/molecules/MyTutorInfo";
+import MyCustomerInfo from "@/atomics/molecules/MyCustomerInfo";
 import { TAccount } from "@/types/entity.type";
 
 type TTabInfoProps = {

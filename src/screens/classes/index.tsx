@@ -1,10 +1,10 @@
 import MyContainer from "@/atomics/atoms/MyContainer";
-import MyCardClass from "@/atomics/molecules/MyCardClass";
 import MyDivider from "@/bases/MyDivider";
 import MyEmpty from "@/bases/MyEmpty";
 import classesService from "@/services/classes";
 import { searchParamsCached } from "./commonClasses";
 import ClassesPagination from "./components/ClassesPagination";
+import ClassItem from "./components/ClassItem";
 import FilterSectionClasses from "./components/FilterSectionClasses";
 
 const findClasses = async (query) => {
@@ -22,6 +22,7 @@ const findClasses = async (query) => {
 const Classes = async ({ params, searchParams }) => {
   const query = searchParamsCached.parse(searchParams);
   const { classes, total } = await findClasses(query);
+
   return (
     <MyContainer className="flex flex-col gap-3">
       <p className="text-xl">Danh sách lớp học</p>
@@ -29,14 +30,22 @@ const Classes = async ({ params, searchParams }) => {
         <FilterSectionClasses />
         <div className="col-span-6 h-full">
           {classes.length === 0 && <MyEmpty />}
-          {classes.map((_class, index) => (
-            <div key={_class.id}>
-              <MyCardClass classProps={_class} />
-              {index !== classes.length - 1 && (
-                <MyDivider style={{ margin: "14px 0px" }} />
-              )}
-            </div>
-          ))}
+          {classes.map((_class, index) => {
+            const { id, registerClasses } = _class;
+            const listRegisterAccountId =
+              registerClasses?.map((item) => item?.account?.id) || [];
+            return (
+              <div key={id}>
+                <ClassItem
+                  _class={_class}
+                  listRegisterAccountId={listRegisterAccountId}
+                />
+                {index !== classes.length - 1 && (
+                  <MyDivider style={{ margin: "14px 0px" }} />
+                )}
+              </div>
+            );
+          })}
           <div className="flex mt-2 justify-end">
             <ClassesPagination total={total} />
           </div>

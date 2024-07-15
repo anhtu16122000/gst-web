@@ -1,57 +1,89 @@
-import MyContactOfAccount from "@/atomics/atoms/MyContactOfAccount";
-import { OBJ_GENDER } from "@/constants/common";
-import { TAccount } from "@/types/entity.type";
-import ModalAddNewAddress from "./ModalAddNewAddress";
+import {
+  OBJ_GENDER,
+  OBJ_SUBJECT,
+  OBJ_TEACHING_METHOD,
+} from "@/constants/common";
+import { TTutor } from "@/types/entity.type";
+import moment from "moment";
 
-type TMyCustomerInfoProps = {
-  account: TAccount;
+type TMyTutorInfoProps = {
+  email: string;
+  tutor?: TTutor;
   options?: {
-    showCreateNewAddress: boolean;
+    showPhoneNumber?: boolean;
+    showAddress?: boolean;
   };
 };
 
-const MyCustomerInfo: React.FC<TMyCustomerInfoProps> = (props) => {
-  const { account, options } = props;
-  const { avatar, email, addressOfAccount = [], customer } = account || {};
-  const { showCreateNewAddress = false } = options || {};
+const MyTutorInfo: React.FC<TMyTutorInfoProps> = ({
+  tutor,
+  email,
+  options = {},
+}) => {
+  const { showPhoneNumber = true, showAddress = true } = options;
+  const fullAddress = `${showAddress ? `${tutor?.address}, ` : ""} ${
+    tutor?.ward?.fullName
+  }, 
+  ${tutor?.district?.fullName}, ${tutor?.province?.fullName}`;
 
   return (
     <div className="grid grid-cols-2 gap-3">
       <div className="col-span-2 flex flex-col">
         <div className="text-gray-600 ">Giới thiệu</div>
         <div className="text-lg font-semibold ">
-          {customer?.note || "Không có"}
+          {tutor?.note || "Không có"}
         </div>
       </div>
       <div className="flex flex-col">
-        <dt className="text-gray-600">Giới tính</dt>
+        <dt className="text-gray-600">Ngày sinh</dt>
         <dd className="text-lg font-semibold">
-          {account?.gender ? OBJ_GENDER?.[account?.gender]?.label : "Không có"}
+          {tutor?.DOB ? moment(tutor.DOB).format("DD/MM/YYYY") : "Không có"}
         </dd>
       </div>
       <div className="flex flex-col">
         <dt className="text-gray-600 ">Email</dt>
         <dd className="text-lg font-semibold">{email || "Không có"}</dd>
       </div>
-      {addressOfAccount.map((item) => {
-        const { address, id, province, district, ward, phoneNumber } =
-          item || {};
-        return (
-          <MyContactOfAccount
-            className="border p-2"
-            key={id}
-            address={address}
-            contactId={id}
-            district={district}
-            phoneNumber={phoneNumber}
-            province={province}
-            ward={ward}
-          />
-        );
-      })}
-      {showCreateNewAddress && <ModalAddNewAddress />}
+      {showPhoneNumber && (
+        <div className="flex flex-col">
+          <dt className="text-gray-600 ">Số điện thoại</dt>
+          <dd className="text-lg font-semibold">
+            {tutor?.phoneNumber || "Không có"}
+          </dd>
+        </div>
+      )}
+      <div className="flex flex-col ">
+        <dt className="text-gray-600 ">Giới tính</dt>
+        <dd className="text-lg font-semibold">
+          {tutor?.gender ? OBJ_GENDER[tutor.gender].label : "Không có"}
+        </dd>
+      </div>
+      <div className="flex flex-col">
+        <dt className="text-gray-600 ">Phương thức giảng dạy</dt>
+        <dd className="text-lg font-semibold">
+          {tutor?.teachingMethod
+            ? OBJ_TEACHING_METHOD[tutor?.teachingMethod].label
+            : "Không có"}
+        </dd>
+      </div>
+      <div className="flex flex-col">
+        <dt className="text-gray-600 ">Môn dạy</dt>
+        <dd className="text-lg font-semibold">
+          {Boolean(tutor?.subjectTutors?.length)
+            ? tutor?.subjectTutors
+                ?.map(({ subjectCode }) => OBJ_SUBJECT[subjectCode].label)
+                .join(", ")
+            : "Không có"}
+        </dd>
+      </div>
+      <div className="flex col-span-2 flex-col ">
+        <dt className="text-gray-600 mt-3">Địa chỉ</dt>
+        <dd className="text-lg font-semibold">
+          <span>{fullAddress}</span>
+        </dd>
+      </div>
     </div>
   );
 };
 
-export default MyCustomerInfo;
+export default MyTutorInfo;

@@ -12,10 +12,8 @@ export const useMySelf = create<TMySelfState>()((set) => ({
     email: "",
     avatar: "",
     registeredBy: "",
-    // type: "",
     refreshToken: "",
     deletedAt: "",
-    customer: "",
     addressOfAccount: [],
   },
 }));

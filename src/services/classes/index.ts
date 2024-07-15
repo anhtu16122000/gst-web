@@ -1,4 +1,5 @@
 import { TApiResponse, TMyPagination } from "@/types/common.type";
+import ClassEntity from "@/types/entities/class.type";
 import { TClass } from "@/types/entity.type";
 import instance from "..";
 import { TClassesCreate, TClassesFindAll } from "./classes.type";
@@ -30,7 +31,7 @@ const classesService = {
   },
   //GET/classes/find-all
   getAll(params?: TClassesFindAll) {
-    return instance.post<TApiResponse<{ data: TClass[]; total: number }>>(
+    return instance.post<TApiResponse<{ data: ClassEntity[]; total: number }>>(
       `${URL}/find-all`,
       params,
     );

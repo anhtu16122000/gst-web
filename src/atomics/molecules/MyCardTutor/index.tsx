@@ -2,19 +2,21 @@
 import MyAvatar from "@/atomics/atoms/MyAvatar";
 import MyButtonHTML from "@/bases/MyButtonHTML";
 import MyLink from "@/bases/MyLink";
-import { OBJ_SUBJECT, OBJ_TEACHING_CLASS_TYPE } from "@/constants/common";
-import { TAccount } from "@/types/entity.type";
+import {
+  OBJ_SUBJECT,
+  OBJ_TEACHING_CLASS_TYPE,
+  OBJECT_TUTOR_PROFILE_STATUS,
+} from "@/constants/common";
+import AccountEntity from "@/types/entities/account.type";
 import { getUrlImage } from "@/utils/imageHandler";
 import numberHandler from "@/utils/numberHandler";
-import { CheckCircleTwoTone } from "@ant-design/icons";
 import HTMLReactParser from "html-react-parser";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSchool } from "react-icons/io5";
 import { MdCheck } from "react-icons/md";
-import RightButtonSection from "./RightButtonSection";
 
 type TMyCardTutorProps = {
-  account: TAccount;
+  account: AccountEntity;
 };
 
 const MyCardTutor: React.FC<TMyCardTutorProps> = ({ account }) => {
@@ -26,6 +28,7 @@ const MyCardTutor: React.FC<TMyCardTutorProps> = ({ account }) => {
     province,
     school,
     note,
+    profileStatus,
     expectedSalary,
   } = tutor || {};
   const fullName = `${firstName} ${lastName}`;
@@ -49,14 +52,17 @@ const MyCardTutor: React.FC<TMyCardTutorProps> = ({ account }) => {
             />
           </div>
           <div>
-            <MyLink
-              href={`/tutors/${tutor?.id}`}
-              DisplayComponent={
-                <p className="font-medium  hover:underline cursor-pointer">
-                  {fullName}
-                </p>
-              }
-            />
+            <div className="flex gap-2">
+              <MyLink
+                href={`/tutors/${tutor?.id}`}
+                DisplayComponent={
+                  <p className="font-medium  hover:underline cursor-pointer">
+                    {fullName}
+                  </p>
+                }
+              />
+              {OBJECT_TUTOR_PROFILE_STATUS?.[profileStatus]?.tag}
+            </div>
             <div className="flex text-gray-600 gap-0.5 items-center">
               <FaLocationDot className="" size={15} />
               <span className=" font-normal">
@@ -69,9 +75,6 @@ const MyCardTutor: React.FC<TMyCardTutorProps> = ({ account }) => {
             </div>
           </div>
         </div>
-        <div>
-          <RightButtonSection />
-        </div>
       </div>
       <div className="flex gap-10">
         <div>
@@ -79,7 +82,7 @@ const MyCardTutor: React.FC<TMyCardTutorProps> = ({ account }) => {
             <span>Lương: </span>
             <p>
               {expectedSalary
-                ? `${numberHandler.formatNumber(expectedSalary)} / Tháng`
+                ? `${numberHandler.formatNumber(expectedSalary)} / giờ`
                 : "Không có"}
             </p>
           </div>
@@ -110,10 +113,6 @@ const MyCardTutor: React.FC<TMyCardTutorProps> = ({ account }) => {
         })}
       </div>
       <div>{note ? HTMLReactParser(note) : "Không có"}</div>
-      <div className="text-sm  text-green-600 flex gap-0.5 ">
-        <CheckCircleTwoTone twoToneColor="#2ab93d" />
-        <span>Hồ sơ đạt chuẩn</span>
-      </div>
     </div>
   );
 };

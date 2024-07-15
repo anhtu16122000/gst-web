@@ -59,13 +59,14 @@ const ModalEdit = ({ account }: { account: TAccount }) => {
   useLayoutEffect(() => {
     form.setFieldsValue({
       ...account,
+      ...(account?.tutor || {}),
       DOB: moment(account.tutor?.DOB),
       subjectCodes: subjectClassCodeTutors,
       teachingClassTypeCodes: teachingClassTypeCodes,
-      provinceCode: account.tutor?.province?.code,
-      districtCode: account.tutor?.district?.code,
-      wardCode: account.tutor?.ward?.code,
-      schoolId: account.tutor?.school?.id,
+      provinceCode: account?.tutor?.province?.code,
+      wardCode: account?.tutor?.ward?.code,
+      districtCode: account?.tutor?.district?.code,
+      schoolId: account?.tutor?.school?.id,
     });
   }, [visible, account, form, subjectClassCodeTutors, teachingClassTypeCodes]);
 

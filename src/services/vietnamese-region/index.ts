@@ -1,4 +1,5 @@
-import instance, { TApiResponse } from "..";
+import { TApiResponse } from "@/types/common.type";
+import instance from "..";
 import { TDistrict, TProvince, TWard } from "./vietnamese-region.type";
 
 const URL: string = `/vietnamese-region`;

@@ -26,3 +26,17 @@ export type TField<T = any> = {
 
   deletedAt: string;
 } & T;
+
+export type MyEntity<T> = {
+  id: string;
+  createdBy: any;
+  updatedBy: any;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+} & T;
+
+export type MyPaginationDTO<T = {}> = {
+  page?: number;
+  limit?: number;
+} & T;

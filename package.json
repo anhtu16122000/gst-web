@@ -15,7 +15,7 @@
     "@hookform/resolvers": "^3.3.4",
     "@tanstack/react-query": "^5.29.2",
     "@tanstack/react-query-devtools": "^5.29.2",
-    "antd": "^5.16.4",
+    "antd": "^5.18.0",
     "antd-img-crop": "^4.21.0",
     "antd-input-otp": "^2.1.0",
     "axios": "^1.6.8",
